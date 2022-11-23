@@ -1,0 +1,15 @@
+version: '3.1'
+services:
+  db:
+    image: mysql
+    container_name: mysql-springboot-scurity-jwt
+    environment:
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mmacedoaraujo_data:/var/lib/mysql
+
+volumes:
+  mmacedoaraujo_data:
