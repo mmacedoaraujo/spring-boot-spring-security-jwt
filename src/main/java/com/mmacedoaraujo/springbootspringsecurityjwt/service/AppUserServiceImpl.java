@@ -4,6 +4,7 @@ import com.mmacedoaraujo.springbootspringsecurityjwt.domain.AppUser;
 import com.mmacedoaraujo.springbootspringsecurityjwt.domain.Role;
 import com.mmacedoaraujo.springbootspringsecurityjwt.repository.AppUserRepository;
 import com.mmacedoaraujo.springbootspringsecurityjwt.repository.RoleRepository;
+import com.mmacedoaraujo.springbootspringsecurityjwt.security.PasswordEnconder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,8 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
 
     private final RoleRepository roleRepository;
 
+    private final PasswordEnconder passwordEnconder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser foundAppUser = appUserRepository.findByUsername(username);
@@ -45,7 +48,8 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
 
     @Override
     public AppUser saveUser(AppUser appUser) {
-        log.info("Saving new user {} to the database", appUser.getName());
+        appUser.setPassword(passwordEnconder.bCryptPasswordEncoder().encode(appUser.getPassword()));
+        log.info("Saving new user with username: {}, and password: {}", appUser.getName(), appUser.getPassword());
         return appUserRepository.save(appUser);
     }
 
